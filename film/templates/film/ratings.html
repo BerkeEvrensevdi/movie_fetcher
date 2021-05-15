@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container">
+    <h2>MOVIES THAT YOU RATED</h2>
+    {% for score in scores %}
+  <div class="media">
+    <div class="media-left media-top">
+      <img src="{{ score.movie.poster_url }}"  class="media-object" style="width:130px; height=180px">
+    </div>
+    <div class="media-body">
+      <h4> <a class="media-heading"  href="{% url 'film:movie_detail' score.movie.id %}">{{score.movie.title}}({{score.movie.date.year}})</a></h4>
+      <p>{{score.movie.topic}}</p>
+    </div>
+    <div class="media-right media-top">
+
+        <div class="split left">
+            <div class="centered">
+                Movie Score<h2>{{score.movie.avg_score}}</h2>
+            </div>
+        </div>
+
+        <div class="split left">
+            <div class="centered">
+                Your Score<h2>{{score.score}}</h2>
+            </div>
+        </div>
+
+    </div>
+
+  </div>
+  <hr>
+    {% endfor %}
+{% endblock %}
+</div>
+
+ {% block content %}
+        <li><a  href="{% url 'logout' %}"><span class="	glyphicon glyphicon-log-out"></span>Log out</a></li>
+  {% endblock %}
+
+
+
+
+{% block content3 %}
+<ul class="nav navbar-nav">
+
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">You
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url 'accounts:view_profile' %}">Profile</a></li>
+          <li><a href="{% url 'film:ratings' %}">All your ratings</a></li>
+          <li><a href="{% url 'film:recommend' %}">Recommend for You</a></li>
+        </ul>
+
+{% endblock %}

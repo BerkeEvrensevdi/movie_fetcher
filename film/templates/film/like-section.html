@@ -1,0 +1,15 @@
+
+
+{% load my_template_tags %}
+
+{% get_bool post user  as get_bool_post_user  %}
+
+
+
+<p>{{post.likes.count}} Like{{ post.likes.count|pluralize }}</p>
+
+{% if get_bool_post_user %}
+    <button type="submit" id="like"  name="post_id" value="{{ post.id }}" class="btn btn-danger" >Dislike</button>
+{% else %}
+    <button type="submit" id="like" name="post_id" value="{{ post.id }}"  class="btn btn-primary" >Like</button>
+{% endif %}

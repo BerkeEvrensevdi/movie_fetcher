@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+
+
+
+
+
+{% block body %}
+
+<div class="container" >
+ {% include 'film/genre_dropdown_list_options.html' %}
+
+</div>
+
+
+
+{% endblock %}
+
+
+ {% block content %}
+        <li><a  href="{% url 'logout' %}"><span class="	glyphicon glyphicon-log-out"></span>Log out</a></li>
+  {% endblock %}
+
+
+
+{% block content2 %}
+<form class="navbar-form navbar-left" action="" method="GET" id="searchform">
+      <div class="form-group">
+        <input  name="q"  value="{{ request.GET.q }}" type="text" class="form-control" placeholder="Search a movie">
+      </div>
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+{% endblock %}
+
+{% block content3 %}
+<ul class="nav navbar-nav">
+
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">You
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url 'accounts:view_profile' %}">Profile</a></li>
+          <li><a href="{% url 'film:ratings' %}">All your ratings</a></li>
+          <li><a href="{% url 'film:recommend' %}">Recommend for You</a></li>
+        </ul>
+
+{% endblock %}

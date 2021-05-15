@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body %}
+
+
+<head>
+     <link rel="stylesheet" href="{% static 'film/style.css' %}">
+ <script>
+
+$(document).ready(function(event){
+    $(document).on('click','#like',function(event){
+    event.preventDefault();
+    var pk = $(this).attr('value');
+    var parent = $(this).parent();
+
+
+    $.ajax({
+               type: "POST",
+               url: "{% url 'film:like_post' %}",
+               data: {'post_id': pk, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+               dataType: "json",
+               success: function(response){
+                      parent.html(response['form']);
+                      console.log(parent);
+                },
+                error: function(rs, e) {
+                       console.log(rs.responseText);
+                },
+          });
+    });
+
+});
+</script>
+
+
+
+
+
+
+
+</head>
+<body>
+<h1></h1>
+
+<div class="media">
+    <div class="media-left media-top">
+      <img src="{{ movie.poster_big_url }}"  class="media-object" style="width:310px;">
+    </div>
+    <div class="media-body">
+      <h4>{{ movie.title }}({{movie.date.year}})</h4>
+      <p>{{movie.topic}}</p>
+        <span>Genre(s):</span>
+        {% for genre in movie.genres.all %}
+        <a href="{% url 'film:movie_genre' genre.id %}">{{genre.name}},</a>
+        {% endfor %}
+        <br>
+        <span>Starring:</span>
+        {% for person in movie.starring.all %}
+        <a href="{% url 'film:person_detail' person.id %}">{{person.name}},</a>
+        {% endfor %}
+        <br>
+        <span>Directed by:</span>
+        {% for person in movie.director.all %}
+        <a href="{% url 'film:person_detail' person.id %}">{{person.name}},</a>
+        {% endfor %}
+        <br>
+        <span>Written by:</span>
+        {% for person in movie.writer.all %}
+        <a href="{% url 'film:person_detail' person.id %}">{{person.name}},</a>
+        {% endfor %}
+         <div id='fi_trailer'><iframe width='400' height='250' src='{{movie.video_url}}'  frameborder='0' allowfullscreen></iframe></div>
+    </div>
+    <div class="media-right media-top">
+        {% if score %}
+        <h4>Your Score</h4>
+        <h2>{{score.score}}</h2>
+        {% else %}
+        <form action="{% url 'film:update_score' movie.id %}" method="post">
+        {% csrf_token %}
+        {{ form_score.as_table }}
+
+        <button type="submit" class="btn btn-primary" >Submit</button>
+
+        </form>
+        {% endif %}
+
+        </div>
+
+
+</div>
+<h3>Reviews</h3>
+{% for post in posts reversed %}
+<div class="container">
+
+<div class="row" style="width:150px;">
+<div class="col-sm-12">
+</div><!-- /col-sm-12 -->
+</div><!-- /row -->
+<div class="row">
+<div class="col-sm-1">
+<div class="thumbnail">
+<img class="img-responsive user-photo" src="https://ssl.gstatic.com/accounts/ui/avatar_2x.png">
+</div><!-- /thumbnail -->
+</div><!-- /col-sm-1 -->
+
+<div class="col-sm-10">
+<div class="panel panel-default">
+<div class="panel-heading" style="background-color:#c2d9fc;">
+
+<strong>{{post.author}}</strong> on <span class="text-muted">{{post.created_date}}</span>
+    {% for point in score_list %}
+        {% if point.user.id == post.author.id %}
+            <span>{{point.score}}/100  Like: {{post.likes.count}}</span>
+        {% endif %}
+    {% endfor %}
+</div>
+<div class="panel-body">
+<div class="text">{{post.text}}</div>
+</div><!-- /panel-body -->
+</div><!-- /panel panel-default -->
+</div><!-- /col-sm-5 -->
+
+
+<div id="like-section{{ forloop.counter }}" class="like-section">
+{% include 'film/like-section.html' %}
+</div>
+
+
+{% endfor %}
+
+
+
+</div><!-- /row -->
+
+
+</div><!-- /container -->
+
+
+<div class="container">
+     <form action="{% url 'film:update_post' movie.id %}" method="post">
+        {% csrf_token %}
+        {{ form_post.as_table }}
+         <button type="submit" class="btn btn-primary">Submit</button>
+     </form>
+
+</div>
+</body>
+{% endblock %}
+
+ {% block content %}
+<li><a href="{% url 'logout' %}"><span class="	glyphicon glyphicon-log-out"></span>Log out</a></li>
+{% endblock %}
+
+
+
+
+{% block content2 %}
+<form class="navbar-form navbar-left" action="{% url 'film:index' %}" method="GET" id="searchform">
+      <div class="form-group">
+        <input  name="q"  value="{{ request.GET.q }}" type="text" class="form-control" placeholder="Search">
+      </div>
+      <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+{% endblock %}

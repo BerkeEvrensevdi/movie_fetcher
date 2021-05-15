@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+<h1>Home</h1>
+{% block head %}
+<title>Home</title>
+{% endblock %}
+
+{% block body %}
+<h1>Home</h1>
+{% endblock%}
+ {% block content %}
+        <li><a  href="{% url 'logout' %}"><span class="	glyphicon glyphicon-log-out"></span>Log out</a></li>
+  {% endblock %}

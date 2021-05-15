@@ -1,0 +1,166 @@
+<head>
+
+<script>
+
+
+    $(document).ready(function(event){
+    $(document).on('click','#rn_filtersubmit_button',function(event){
+    event.preventDefault();
+
+    var parent = $(this).parent()
+
+    //var siblingID = $(sibling).attr('value')
+    //console.log(siblingID);
+    var sibling = $(this).previousSibling
+    var e = document.getElementById("rn_genrefilter");
+    var genre_name = e.options[e.selectedIndex].value;
+    var from = document.getElementById('rn_filter_fromyear').value
+    var to = document.getElementById('rn_filter_toyear').value
+    console.log(from);
+    console.log(to);
+    //var genreId = $(this).previous.children(":selected").attr("value")
+    //var genreId = $(this).closest(":selected").attr("value")
+    //console.log(genreId)
+    var show = $(this).parent().parent().parent()
+
+    //var genreId = document.getElementById("genre_id").getAttribute("value");
+    $.ajax({
+               type: "GET",
+               url: "{% url 'film:load_genres' %}",
+               data: {'genre_name': genre_name, 'fromyear' : from, 'toyear' : to}, // genreyi eskiden id'den aliyorduk
+               dataType: "json",
+               success: function(response){
+                      show.html(response['form']);
+                      console.log("hello world");
+                      //console.log(genreId);
+
+                },
+                error: function(rs, e) {
+                       console.log(rs.responseText);
+                       console.log("hello world");
+                },
+          });
+
+    });
+
+});
+
+
+
+</script>
+</head>
+
+
+ <div id='rn_filterbar'>
+
+  <form class='form-inline' method='get' data-genres-url="{% url 'film:load_genres' %}" name='filter_form' id='rn_filterform'>
+   <select class='form-control m-0 mr-3' id='rn_genrefilter' name='genre'>
+            <option value=''>Genre</option>
+
+            <option value="Action" id="genre_id">Action</option>
+
+            <option value="Crime" id="genre_id">Crime</option>
+
+            <option value="Drama" id="genre_id">Drama</option>
+
+            <option value="Thriller" id="genre_id">Thriller</option>
+
+            <option value="War" id="genre_id">War</option>
+
+            <option value="Romance" id="genre_id">Romance</option>
+
+            <option value="Comedy" id="genre_id">Comedy</option>
+
+            <option value="Science Fiction" id="genre_id">Science Fiction</option>
+
+            <option value="Adventure" id="genre_id">Adventure</option>
+
+            <option value="Fantasy" id="genre_id">Fantasy</option>
+
+            <option value="Mystery" id="genre_id">Mystery</option>
+
+            <option value="Family" id="genre_id">Family</option>
+
+            <option value="Animation" id="genre_id">Animation</option>
+
+            <option value="Documentary" id="genre_id">Documentary</option>
+
+            <option value="Western" id="genre_id">Western</option>
+
+            <option value="History" id="genre_id">History</option>
+
+            <option value="TV Movie" id="genre_id">TV Movie</option>
+
+            <option value="Horror" id="genre_id">Horror</option>
+
+            <option value="Music" id="genre_id">Music</option>
+
+   </select>
+
+
+
+     <input class='form-control' id='rn_filter_fromyear' type='number' name='from' class='rn_filtertext' value='' placeholder='from_year'>
+
+     <input class='form-control mr-2' id='rn_filter_toyear' type='number' name='to' class='rn_filtertext' value='' placeholder='to_year'>
+
+
+    <button class='btn btn-default m-1' type='submit' name='rn_gofilter' id='rn_filtersubmit_button'>Go</button>
+  </form>
+ </div>
+{% if movies %}
+    {% for movie in movies %}
+  <div class="media">
+    <div class="media-left media-top">
+      <img src="{{ movie.poster_url }}"  class="media-object" style="width:130px; height=180px">
+    </div>
+    <div class="media-body">
+      <h4> <a class="media-heading"  href="{% url 'film:movie_detail' movie.id %}">{{movie.title}}({{movie.date.year}})</a></h4>
+      <p>{{movie.topic}}</p>
+    </div>
+    <div class="media-right media-top">
+      Score<h2>{{movie.avg_score}}</h2>
+    </div>
+
+  </div>
+  <hr>
+    {% endfor %}
+{% if is_paginated %}
+<div class="text-center">
+        <div class="pagination">
+            <span class="page-links">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link"  tabindex="-1">Previous</a>
+                    </li>
+                {% endif %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#" tabindex="-1">Next</a>
+                    </li>
+                {% endif %}
+                    </ul>
+                </nav>
+                <span class="page-current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+            </span>
+        </div>
+</div>
+    {% endif %}
+{% else %}
+    <p>No movies found!!! :(</p>
+{% endif %}
+
+

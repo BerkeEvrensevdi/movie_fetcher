@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+
+<div class="contanier" >
+<h1 style=" margin: 0 auto; text-align: center;">Welcome!</h1>
+
+<img src="https://1.bp.blogspot.com/-cxsIbHIlbxA/Xuahz7X-JpI/AAAAAAAAFIQ/XqTjC7Axs_goAjUXG9Yz8pPK6F5lC6KSgCNcBGAsYHQ/s1600/3a5b585b-dae7-42e9-a180-7cc343e2ad3a_200x200.png" alt="logo" class="center"	style="margin-left: auto; margin-right: auto; display: block;" >
+
+<h2 style="margin: 0 auto; text-align: center;">Login</h2>
+<p></p>
+    <p></p>
+
+<form method = "post" style="width:500px; margin: 0 auto; text-align: center;">
+    {% csrf_token %}
+    {{form.as_p }}
+    <button type="submit">Login</button>
+</form>
+
+</div>
+
+{% endblock%}
+ {% block content %}
+        <li><a  href="{% url 'accounts:register' %}"> <span class="glyphicon glyphicon-user"></span>Sign up</a></li>
+  {% endblock %}

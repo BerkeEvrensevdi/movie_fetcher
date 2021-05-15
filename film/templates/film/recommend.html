@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block body %}
+<div class="container">
+    <h2>RANKED RECOMMENDED MOVIES</h2>
+    {% for rec_movie in rec_movies %}
+  <div class="media">
+    <div class="media-left media-top">
+      <img src="{{ rec_movie.movie.poster_url }}"  class="media-object" style="width:130px; height=180px">
+    </div>
+    <div class="media-body">
+      <h4> <a class="media-heading"  href="{% url 'film:movie_detail' rec_movie.movie.id %}">{{forloop.counter}}.{{rec_movie.movie.title}}({{rec_movie.movie.date.year}})</a></h4>
+      <p>{{rec_movie.movie.topic}}</p>
+    </div>
+    <div class="media-right media-top">
+
+        Movie Score<h2>{{rec_movie.movie.avg_score}}</h2>
+
+    </div>
+
+  </div>
+  <hr>
+    {% endfor %}
+{% endblock %}
+</div>
+
+ {% block content %}
+        <li><a  href="{% url 'logout' %}"><span class="	glyphicon glyphicon-log-out"></span>Log out</a></li>
+  {% endblock %}
+
+
+
+
+{% block content3 %}
+<ul class="nav navbar-nav">
+
+      <li class="dropdown">
+        <a class="dropdown-toggle" data-toggle="dropdown" href="#">You
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li><a href="{% url 'accounts:view_profile' %}">Profile</a></li>
+          <li><a href="{% url 'film:ratings' %}">All your ratings</a></li>
+          <li><a href="#">Starred Reviews</a></li>
+        </ul>
+
+{% endblock %}
